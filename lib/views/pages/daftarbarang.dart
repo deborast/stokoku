@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../viewmodels/barangviewmodel.dart';
-import 'formeditbarang.dart'; 
+part of 'pages.dart';
+
+// Lanjut langsung ke class kamu, contoh:
+// class DashboardPage extends StatelessWidget { ... }
 
 class DaftarBarangPage extends StatelessWidget {
   const DaftarBarangPage({super.key});

@@ -1,37 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/barangmodel.dart';
-import '../viewmodels/barangviewmodel.dart';
+part of 'pages.dart';
 
-class FormEditBarangPage extends StatefulWidget {
-  final Barang barangLama;
-  
-  const FormEditBarangPage({super.key, required this.barangLama});
+// Lanjut langsung ke class kamu, contoh:
+// class DashboardPage extends StatelessWidget { ... }
+
+class FormTambahBarangPage extends StatefulWidget {
+  const FormTambahBarangPage({super.key});
 
   @override
-  State<FormEditBarangPage> createState() => _FormEditBarangPageState();
+  State<FormTambahBarangPage> createState() => _FormTambahBarangPageState();
 }
 
-class _FormEditBarangPageState extends State<FormEditBarangPage> {
+class _FormTambahBarangPageState extends State<FormTambahBarangPage> {
   final _formKey = GlobalKey<FormState>(); 
   
-  late TextEditingController _namaController;
-  late TextEditingController _kategoriController;
-  late TextEditingController _deskripsiController;
-  late TextEditingController _stokController;
-  late TextEditingController _hargaController;
+  final _namaController = TextEditingController();
+  final _kategoriController = TextEditingController();
+  final _deskripsiController = TextEditingController();
+  final _stokController = TextEditingController();
+  final _hargaController = TextEditingController();
   
+  bool _isFotoUploaded = false; 
   bool _isHovering = false; 
-
-  @override
-  void initState() {
-    super.initState();
-    _namaController = TextEditingController(text: widget.barangLama.nama);
-    _kategoriController = TextEditingController(text: widget.barangLama.kategori);
-    _deskripsiController = TextEditingController(text: widget.barangLama.deskripsi);
-    _stokController = TextEditingController(text: widget.barangLama.stok.toString());
-    _hargaController = TextEditingController(text: widget.barangLama.hargaJual.toString());
-  }
 
   @override
   void dispose() {
@@ -82,8 +71,8 @@ class _FormEditBarangPageState extends State<FormEditBarangPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Data Produk', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xFFFFD54F), // Tema Kuning Pastel untuk Edit
+        title: const Text('Input Produk Baru', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: const Color(0xFFFFC1CC), 
         foregroundColor: Colors.black87,
       ),
       body: SingleChildScrollView(
@@ -93,9 +82,58 @@ class _FormEditBarangPageState extends State<FormEditBarangPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Ubah Detail Formulir Barang', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+              const Text('Isi Detail Formulir Barang', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
               const SizedBox(height: 25),
               
+              // AREA FOTO
+              const Text('Foto Produk (Opsional)', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54)),
+              const SizedBox(height: 8),
+              Center(
+                child: GestureDetector(
+                  onTap: () { 
+                    setState(() {
+                      _isFotoUploaded = !_isFotoUploaded; 
+                    });
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF5F5F5),
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: const Color(0xFFFFC1CC), width: 2),
+                    ),
+                    child: _isFotoUploaded
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(13),
+                            child: Container(
+                              color: const Color(0xFFE8F5E9),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.check_circle, color: Color(0xFF4CAF50), size: 32),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Foto Berhasil Dipasang!', 
+                                    style: TextStyle(color: Color(0xFF4CAF50), fontWeight: FontWeight.bold, fontSize: 15)
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_a_photo, size: 42, color: Colors.grey),
+                              SizedBox(height: 8),
+                              Text('Ketuk untuk simulasi upload foto', style: TextStyle(color: Colors.grey, fontSize: 13)),
+                            ],
+                          ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
               _buildTextField(
                 controller: _namaController, label: 'Nama Barang', hint: 'Contoh: Baut Baja',
                 validator: (value) => value == null || value.trim().isEmpty ? 'Wajib diisi!' : null,
@@ -126,7 +164,7 @@ class _FormEditBarangPageState extends State<FormEditBarangPage> {
               ),
               
               const SizedBox(height: 20),
-              
+
               MouseRegion(
                 onEnter: (event) => setState(() => _isHovering = true), 
                 onExit: (event) => setState(() => _isHovering = false), 
@@ -138,15 +176,16 @@ class _FormEditBarangPageState extends State<FormEditBarangPage> {
                     height: 54,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF57F17), // Warna oranye tua untuk tombol update
+                        backgroundColor: const Color(0xFF4CAF50), 
                         foregroundColor: Colors.white,
                         elevation: _isHovering ? 8 : 2, 
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          final barangUpdate = Barang(
-                            id: widget.barangLama.id, // ID tidak boleh berubah
+                          final viewModel = Provider.of<BarangViewModel>(context, listen: false);
+                          
+                          viewModel.tambahBarang(
                             nama: _namaController.text,
                             deskripsi: _deskripsiController.text,
                             kategori: _kategoriController.text,
@@ -154,19 +193,23 @@ class _FormEditBarangPageState extends State<FormEditBarangPage> {
                             hargaJual: double.parse(_hargaController.text),
                           );
 
-                          Provider.of<BarangViewModel>(context, listen: false).updateBarang(barangUpdate);
-
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Data berhasil diperbarui!'),
-                              backgroundColor: Color(0xFFF57F17), 
+                            SnackBar(
+                              content: Row(
+                                children: [
+                                  const Icon(Icons.check_circle, color: Colors.white),
+                                  const SizedBox(width: 10),
+                                  Expanded(child: Text('Produk "${_namaController.text}" Berhasil Disimpan!')),
+                                ],
+                              ),
+                              backgroundColor: const Color(0xFF2E7D32), 
                             ),
                           );
                           Navigator.pop(context); 
                         }
                       },
-                      icon: const Icon(Icons.update, size: 24),
-                      label: const Text('Update Data Gudang', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      icon: const Icon(Icons.save_rounded, size: 24),
+                      label: const Text('Simpan Ke Gudang', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ),

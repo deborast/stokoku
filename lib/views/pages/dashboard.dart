@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'formbarang.dart'; 
-import 'daftarbarang.dart'; 
+part of 'pages.dart';
+
+// Lanjut langsung ke class kamu, contoh:
+// class DashboardPage extends StatelessWidget { ... }
 
 class HalamanPilihTokoNetflix extends StatelessWidget {
   const HalamanPilihTokoNetflix({super.key});

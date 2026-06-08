@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'views/dashboard.dart';
 import 'repositories/barangrepository.dart';
 import 'viewmodels/barangviewmodel.dart';
+import 'views/pages/pages.dart';
 
 void main() {
   runApp(

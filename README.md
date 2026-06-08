@@ -16,6 +16,7 @@ Selain MVVM dasar, aplikasi ini telah merancang struktur folder tingkat lanjut (
 2. **Modular Widgets (`views/widgets/`):** Folder ini disiapkan khusus untuk memecah UI menjadi komponen kecil yang dapat dipakai ulang (*reusable*, misal: `CardView`). Saat ini folder masih **belum terisi**, karena fokus pengembangan baru pada kerangka utama halaman (Pages).
 3. **Data Layer (`data/`) - *Optional*:** Folder ini disiapkan untuk mengatur sirkulasi data, *networking*, respons *server*, dan API. Saat ini statusnya **belum terisi** karena aplikasi masih menggunakan data lokal (*dummy*).
 4. **Shared Directory (`shared/`) - *Optional*:** Disiapkan untuk menyimpan fungsi, *widget*, atau variabel yang bersifat universal/masal (contoh: *API Key*, konfigurasi tema, dll). Saat ini statusnya **belum terisi**, namun kerangkanya sudah dibuat untuk memastikan aplikasi siap di-skala (*scalable*) pada tahap integrasi *backend* nanti.
+5. folder"  yang status nya masih kosong saya beri .gitkeep agar tetap terdeteksi di github (dapat dinilai)
 
 ## How to Run This Application
 1. Pastikan Flutter SDK telah terinstal dengan baik di sistem Anda.
